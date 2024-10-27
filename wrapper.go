@@ -11,6 +11,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/tenebris-tech/easysrv/SimpleLogger"
 )
 
 // Wrapper returns a standard http.HandlerFunc
@@ -39,8 +41,8 @@ func (e *EasySrv) Wrapper(handlerName string, hFunc Handler) http.Handler {
 		// Send the response
 		w.WriteHeader(resp.Code)
 		if err := json.NewEncoder(w).Encode(resp); err != nil {
-			e.Logger.Error(fmt.Sprintf("JSON encode error in %s handler: %s", handlerName, err.Error()),
-				Fields{
+			e.Logger.Error(e.SEid+11, fmt.Sprintf("JSON encode error in %s handler: %s", handlerName, err.Error()),
+				SimpleLogger.Fields{
 					"src":     src,
 					"method":  req.Method,
 					"uri":     req.RequestURI,
@@ -56,8 +58,8 @@ func (e *EasySrv) Wrapper(handlerName string, hFunc Handler) http.Handler {
 		uri := strings.Split(req.RequestURI, "?")[0]
 
 		// Log the event
-		e.Logger.Info(fmt.Sprintf("%s %s %d", req.Method, uri, resp.Code),
-			Fields{
+		e.Logger.Info(e.SEid+10, fmt.Sprintf("%s %s %d", req.Method, uri, resp.Code),
+			LoggerFields{
 				"src":      src,
 				"method":   req.Method,
 				"uri":      uri,

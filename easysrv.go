@@ -18,6 +18,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"golang.org/x/net/netutil"
+
+	"github.com/tenebris-tech/easysrv/SimpleLogger"
 )
 
 type EasySrv struct {
@@ -39,7 +41,8 @@ type EasySrv struct {
 	TLSStrongCiphers bool
 	Debug            bool
 	server           *http.Server
-	Logger           Logger // Our logger interface for compatibility - see logger.go
+	Logger           Logger // Our logger interface for compatibility
+	SEid             uint32 // Event ID for logging
 }
 
 type Handler func(request *http.Request) Response
@@ -69,19 +72,28 @@ type Response struct {
 	Data    any    `json:"data,omitempty"`    // any is the new interface{}
 }
 
-// New returns a EasySrv struct with default values
-//
-//goland:noinspection GoUnusedExportedFunction
-func New() *EasySrv {
+// Logger is an interface that defines the logging methods and is compatible with log.Logger
+type Logger interface {
+	Debug(eid uint32, msg string, fields map[string]interface{})
+	Info(eid uint32, msg string, fields map[string]interface{})
+	Warning(eid uint32, msg string, fields map[string]interface{})
+	Error(eid uint32, msg string, fields map[string]interface{})
+	Fatal(eid uint32, msg string, fields map[string]interface{})
+}
 
-	// Set defaults
-	e := EasySrv{
+// LoggerFields is a map of key/value pairs for logging
+type LoggerFields map[string]interface{}
+
+// New returns a EasySrv struct with default values and options applied
+func New(options ...func(*EasySrv) error) (*EasySrv, error) {
+	e := &EasySrv{
 		Listen:           "127.0.0.1:8080",
 		HTTPTimeout:      60,
 		HTTPIdleTimeout:  60,
 		MaxConcurrent:    100,
 		LogFile:          "", // Default to stdout
 		DownFile:         "",
+		SEid:             0,
 		HealthHandler:    true,
 		TestHandler:      false,
 		StrictSlash:      false,
@@ -92,7 +104,15 @@ func New() *EasySrv {
 		TLSStrongCiphers: true,
 		Debug:            false,
 	}
-	return &e
+
+	// Process options (see options.go)
+	for _, op := range options {
+		err := op(e)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return e, nil
 }
 
 // Start starts the API
@@ -101,13 +121,13 @@ func (e *EasySrv) Start() error {
 
 	// Set the logger to stdout if not already set
 	if e.Logger == nil {
-		e.Logger, err = NewSimpleLogger(e.LogFile)
+		e.Logger, err = SimpleLogger.New(e.LogFile)
 		if err != nil {
 			return err
 		}
 	}
 
-	e.Logger.Info("Starting server", Fields{"listen": e.Listen}) // TODO
+	e.Logger.Info(e.SEid+1, "Starting server", LoggerFields{"listen": e.Listen})
 
 	// Add default headers if requested
 	if e.DefaultHeaders {

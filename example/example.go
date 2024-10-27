@@ -8,33 +8,33 @@
 package main
 
 import (
-	"github.com/tenebris-tech/easysrv"
 	"net/http"
+
+	"github.com/tenebris-tech/easysrv"
 )
 
 func main() {
 
 	// Create a new EasySrv instance
-	e := easysrv.New()
-
-	// Set a log file
-	e.LogFile = "example.log"
-
-	// Enable the test handler
-	e.TestHandler = true
-
-	// Enable debug logging
-	e.Debug = true
+	server, err := easysrv.New(
+		easysrv.WithLogFile("example.log"),
+		easysrv.WithListen(":8080"),
+		easysrv.WithTestHandler(true),
+		easysrv.WithDebug(true),
+	)
+	if err != nil {
+		panic(err)
+	}
 
 	// Add a handler for /help
-	e.AddRoute(easysrv.Route{
+	server.AddRoute(easysrv.Route{
 		Name:    "help",
 		Method:  "GET",
 		Pattern: "/help",
 		Handler: getHelp})
 
 	// Start the server
-	err := e.Start()
+	err = server.Start()
 	if err != nil {
 		panic(err)
 	}
