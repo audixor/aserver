@@ -1,4 +1,4 @@
-module github.com/tenebris-tech/easysrv
+module github.com/audixor/aserver
 
 go 1.23.0
 

@@ -10,7 +10,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/tenebris-tech/easysrv"
+	"github.com/audixor/aserver"
 )
 
 func main() {

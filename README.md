@@ -1,4 +1,4 @@
-# easysrv
+# aserver
 Golang HTTPS server made easy
 
 Copyright (c) 2024 Tenebris Technologies Inc.
