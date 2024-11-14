@@ -24,7 +24,7 @@ This package implements a production quality HTTP server with the following feat
 - A simple logger that can be replaced with a custom logger if desired
 
 Handlers are also simplified. Instead of using the `http.Handler` interface, handle
-functions must accept *http.Request and return an easysrv.Response structure.
+functions must accept *http.Request and return an aserver.Response structure.
 
 ## Contributions
 PRs are welcome provided that they are consistent with the MIT License.

@@ -3,7 +3,7 @@
 // See LICENSE for further information.
 //
 
-package easysrv
+package aserver
 
 import (
 	"fmt"
@@ -15,7 +15,7 @@ import (
 // HandlerHealth implements a health check for load balancers, etc.
 //
 //goland:noinspection GoUnusedParameter
-func (e *EasySrv) HandlerHealth(r *http.Request) Response {
+func (e *AServer) HandlerHealth(r *http.Request) Response {
 	var resp Response
 
 	// Check for presence of the file that indicates the server is down
@@ -34,29 +34,29 @@ func (e *EasySrv) HandlerHealth(r *http.Request) Response {
 }
 
 //goland:noinspection GoUnusedParameter
-func (e *EasySrv) Handler401(r *http.Request) Response {
+func (e *AServer) Handler401(r *http.Request) Response {
 	return e.status4xx(http.StatusUnauthorized, "not authorized")
 }
 
 //goland:noinspection GoUnusedParameter
-func (e *EasySrv) Handler404(r *http.Request) Response {
+func (e *AServer) Handler404(r *http.Request) Response {
 	return e.status4xx(http.StatusNotFound, "object does not exist")
 }
 
 //goland:noinspection GoUnusedParameter
-func (e *EasySrv) Handler405(r *http.Request) Response {
+func (e *AServer) Handler405(r *http.Request) Response {
 	return e.status4xx(http.StatusMethodNotAllowed, "method not allowed")
 }
 
 // status4xx returns a 4xx error
-func (e *EasySrv) status4xx(code int, message string) Response {
+func (e *AServer) status4xx(code int, message string) Response {
 	return Response{Details: message, Status: "error", Code: code}
 }
 
 // HandlerTest accepts an optional 'id' variable and echos it back
 // This is an example of a handler that can receive a variable in the URL or not
 // Note that two routes are defined in routes.go, one with the variable and one without
-func (e *EasySrv) HandlerTest(r *http.Request) Response {
+func (e *AServer) HandlerTest(r *http.Request) Response {
 	var resp Response
 
 	// Get parameter

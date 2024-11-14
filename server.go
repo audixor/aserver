@@ -3,9 +3,9 @@
 // See LICENSE for further information.
 //
 
-// Package easysrv implements a wrapper around gorilla/mux router and net/http server
+// Package aserver implements a wrapper around gorilla/mux router and net/http server
 // to create a production grade server and simply the creation of routes and handlers.
-package easysrv
+package aserver
 
 import (
 	"context"
@@ -19,10 +19,10 @@ import (
 	"github.com/gorilla/mux"
 	"golang.org/x/net/netutil"
 
-	"github.com/tenebris-tech/easysrv/SimpleLogger"
+	"github.com/audixor/aserver/SimpleLogger"
 )
 
-type EasySrv struct {
+type AServer struct {
 	Headers          Headers
 	Routes           Routes
 	Listen           string
@@ -84,9 +84,9 @@ type Logger interface {
 // LoggerFields is a map of key/value pairs for logging
 type LoggerFields map[string]interface{}
 
-// New returns a EasySrv struct with default values and options applied
-func New(options ...func(*EasySrv) error) (*EasySrv, error) {
-	e := &EasySrv{
+// New returns a AServer struct with default values and options applied
+func New(options ...func(*AServer) error) (*AServer, error) {
+	e := &AServer{
 		Listen:           "127.0.0.1:8080",
 		HTTPTimeout:      60,
 		HTTPIdleTimeout:  60,
@@ -116,7 +116,7 @@ func New(options ...func(*EasySrv) error) (*EasySrv, error) {
 }
 
 // Start starts the API
-func (e *EasySrv) Start() error {
+func (e *AServer) Start() error {
 	var err error
 
 	// Set the logger to stdout if not already set
@@ -228,7 +228,7 @@ func (e *EasySrv) Start() error {
 	return e.listen(s)
 }
 
-func (e *EasySrv) Stop() error {
+func (e *AServer) Stop() error {
 
 	// Tell the server it has 10 seconds to finish
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -249,7 +249,7 @@ func (e *EasySrv) Stop() error {
 }
 
 // AddRoutes adds routes to the router
-func (e *EasySrv) AddRoutes(routes Routes) {
+func (e *AServer) AddRoutes(routes Routes) {
 	// Iterate over routes and add to the router
 	for _, route := range routes {
 		e.AddRoute(route)
@@ -257,18 +257,18 @@ func (e *EasySrv) AddRoutes(routes Routes) {
 }
 
 // AddRoute adds a route to the router
-func (e *EasySrv) AddRoute(route Route) {
+func (e *AServer) AddRoute(route Route) {
 	e.Routes = append(e.Routes, route)
 }
 
 // AddHeader adds a header to the list
-func (e *EasySrv) AddHeader(key, value string) {
+func (e *AServer) AddHeader(key, value string) {
 	e.Headers = append(e.Headers, Header{key, value})
 }
 
 // listen is a replacement for ListenAndServe that implements a concurrent session limit
 // using netutil.LimitListener. If maxConcurrent is 0, no limit is imposed.
-func (e *EasySrv) listen(srv *http.Server) error {
+func (e *AServer) listen(srv *http.Server) error {
 
 	// Store the server to allow for a graceful shutdown
 	e.server = srv

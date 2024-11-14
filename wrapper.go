@@ -3,7 +3,7 @@
 // See LICENSE for further information.
 //
 
-package easysrv
+package aserver
 
 import (
 	"encoding/json"
@@ -12,12 +12,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tenebris-tech/easysrv/SimpleLogger"
+	"github.com/audixor/aserver/SimpleLogger"
 )
 
 // Wrapper returns a standard http.HandlerFunc
 // This wrapper provides consistent logging and HTTP headers
-func (e *EasySrv) Wrapper(handlerName string, hFunc Handler) http.Handler {
+func (e *AServer) Wrapper(handlerName string, hFunc Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 
 		// Get the start time and source IP
@@ -72,7 +72,7 @@ func (e *EasySrv) Wrapper(handlerName string, hFunc Handler) http.Handler {
 
 // getIP returns an IP address by reading the forwarded-for
 // header (for proxies or load balancers) and falls back to use the remote address.
-func (e *EasySrv) getIP(r *http.Request) string {
+func (e *AServer) getIP(r *http.Request) string {
 	var s = ""
 	forwarded := r.Header.Get("X-FORWARDED-FOR")
 	if forwarded != "" {

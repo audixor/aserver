@@ -3,7 +3,7 @@
 // See LICENSE for further information.
 //
 
-// This is a simple example of how to implement an HTTP server using the easysrv package
+// This is a simple example of how to implement an HTTP server using the aserver package
 
 package main
 
@@ -15,19 +15,19 @@ import (
 
 func main() {
 
-	// Create a new EasySrv instance
-	server, err := easysrv.New(
-		easysrv.WithLogFile("example.log"),
-		easysrv.WithListen(":8080"),
-		easysrv.WithTestHandler(true),
-		easysrv.WithDebug(true),
+	// Create a new AServer instance
+	server, err := aserver.New(
+		aserver.WithLogFile("example.log"),
+		aserver.WithListen(":8080"),
+		aserver.WithTestHandler(true),
+		aserver.WithDebug(true),
 	)
 	if err != nil {
 		panic(err)
 	}
 
 	// Add a handler for /help
-	server.AddRoute(easysrv.Route{
+	server.AddRoute(aserver.Route{
 		Name:    "help",
 		Method:  "GET",
 		Pattern: "/help",
@@ -41,8 +41,8 @@ func main() {
 }
 
 // getHelp returns a help message
-// Handlers must accept *http.Request and return an easysrv.Response structure
-// See easysrv/handlers.go for more examples including additional parameters
-func getHelp(*http.Request) easysrv.Response {
-	return easysrv.Response{Details: "This is a help message", Status: "ok", Code: http.StatusOK}
+// Handlers must accept *http.Request and return an aserver.Response structure
+// See aserver/handlers.go for more examples including additional parameters
+func getHelp(*http.Request) aserver.Response {
+	return aserver.Response{Details: "This is a help message", Status: "ok", Code: http.StatusOK}
 }
