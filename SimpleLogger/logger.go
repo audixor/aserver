@@ -1,6 +1,6 @@
 //
-// Copyright (c) 2021-2024 Tenebris Technologies Inc.
-// See LICENSE for further information.
+// Copyright (c) 2024 Tenebris Technologies Inc.
+// Please see the LICENSE file for details
 //
 
 package SimpleLogger

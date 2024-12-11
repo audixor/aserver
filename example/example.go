@@ -1,6 +1,6 @@
 //
 // Copyright (c) 2024 Tenebris Technologies Inc.
-// See LICENSE for further information.
+// Please see the LICENSE file for details
 //
 
 // This is a simple example of how to implement an HTTP server using the aserver package
